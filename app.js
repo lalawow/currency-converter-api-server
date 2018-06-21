@@ -7,14 +7,10 @@ const options = {
     maxAge: '1h'
 }
 
-
-
-
-
 app.use('/api', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
 app.use('/images/uploads', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
 app.use('/images/optimized', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
-app.use(express.static(path.join(__dirname, 'dist')), options);
+app.use(express.static(path.join(__dirname, 'dist'), options));
 
 app.listen(process.env.PORT_NUMBER)
 module.exports = app;
