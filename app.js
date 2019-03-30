@@ -1,30 +1,22 @@
-let express = require('express');
+const express = require('express');
 const fs = require('fs')
 const https = require('https')
-let proxy = require('http-proxy-middleware');
-let path = require('path');
-let app = express()
+const proxy = require('http-proxy-middleware');
+const path = require('path');
+const app = express()
 require('dotenv').load();
 const options = {
     maxAge: '1h'
 }
+const cors = require('cors')
+app.use(cors());
 
-app.use('/api', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
-app.use('/images/uploads', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
-app.use('/images/optimized', proxy({ target: process.env.PROXY_TARGET, changeOrigin: true }));
-// app.use('/', proxy({ target: process.env.STATIC_OSS, changeOrigin: true }));
+const api = require('./routes/api');
+app.use('/api', api);
+
+
 app.use(express.static(path.join(__dirname, 'dist'), options));
-//刷新时将网址导引到history模式的app上去
-app.use(function(req, res, next) {
-    res.sendFile(path.join(__dirname, "tool", "redirect.html"));
-});
+
 app.listen(process.env.PORT_NUMBER)
-
-// https.createServer({
-//         key: fs.readFileSync('cert/server.key'),
-//         cert: fs.readFileSync('cert/server.cert')
-//     }, app)
-//     .listen(process.env.PORT_NUMBER)
-
 
 module.exports = app;
