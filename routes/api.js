@@ -10,6 +10,8 @@ const getCurrency = () => {
     axios.get('https://openexchangerates.org/api/latest.json?app_id=' + process.env.DATA_KEY_ID).then(res => {
         //console.log("get data:", res.data)
         currency = Object.assign({}, res.data)
+    }).catch(error => {
+        console.log(error.response)
     })
 }
 getCurrency()
